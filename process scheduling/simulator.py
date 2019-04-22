@@ -69,48 +69,48 @@ def RR_scheduling(process_list, time_quantum ):
 def SRTF_scheduling(process_list):
     schedule = []
     current_time = 0
-    
-    L = len(process_list) 
-    rem_bt = [0]*L
-    waiting_time = [0]*L
-    for i in range(L):
-        rem_bt[i] = process_list[i].burst_time
-    complete = 0
-    minm = sys.maxint
-    short = 0
-    check = False
-    
-    while(complete!=L):
-        for i in range(L):
-            if  process_list[i].arrive_time <= current_time and \
-                rem_bt[i] < minm and rem_bt[i]>0:
-                minm = rem_bt[i]
-                short = i 
-                check = True
+    waiting_time = 0
+    count = index = 0
+    length = len(process_list)
+    rem_bt = [p.burst_time for p in process_list]
 
-        schedule.append((current_time,process_list[short].id))
-                
-        if (check == False):
-            current_time += 1
+    while count < length:
+        candidate_burst = [t for t in rem_bt[:index + 1] if t]
+
+        if not len(candidate_burst):
+            index += 1
             continue
-        rem_bt[short] -= 1
-        minm = rem_bt[short]  
-        if (minm == 0):  
-            minm = sys.maxint
-        if (rem_bt[short] == 0): 
-            complete += 1
-            check = False
-            finish = current_time + 1
-            waiting_time[short] = (finish - process_list[short].burst_time -    
-                                    process_list[short].arrive_time) 
-            if (waiting_time[short] < 0): 
-                waiting_time[short] = 0 
-        current_time += 1
 
-    average_waiting_time = sum(waiting_time)/float(len(process_list))
+        srtf_index = rem_bt.index(min(candidate_burst))
+        # index = rem_bt.index(min([t for t in rem_bt if t and t <= current_time]))
+        process = process_list[srtf_index]
+
+        if current_time < process.arrive_time:
+            current_time = process.arrive_time
+
+        if not len(schedule) or schedule[-1][1] != process.id:
+            schedule.append((current_time, process.id))
+
+        run_time = rem_bt[srtf_index]
+
+        if index < length - 1: 
+            nxt = process_list[index + 1]
+            run_time = min(run_time, nxt.arrive_time - current_time)
+
+            if current_time >= nxt.arrive_time:
+                index += 1
+
+        current_time += run_time
+        rem_bt[srtf_index] -= run_time
+
+        if not rem_bt[srtf_index]:
+            waiting_time += current_time - process.arrive_time - process.burst_time
+            count += 1
+
+    average_waiting_time = waiting_time / float(length)
     print('Average waiting time = '+str(average_waiting_time))
     return schedule, average_waiting_time
-
+  
 def SJF_scheduling(process_list, alpha):
     schedule = []
     predict_list = {}
