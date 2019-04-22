@@ -110,8 +110,7 @@ def SRTF_scheduling(process_list):
     print('Average waiting time = '+str(average_waiting_time))
     return schedule, average_waiting_time
   
-def SJF_scheduling(process_list, alpha):
-    schedule = []
+def SJF_scheduling(process_list, alpha): schedule = []
     predict_list = {}
     finished = {}
     current_time = 0
