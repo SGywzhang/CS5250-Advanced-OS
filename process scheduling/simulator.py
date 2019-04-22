@@ -13,7 +13,7 @@ import sys
 import copy
 import math
 
-input_file = '/Users/yaowenzhang/Downloads/cs5250-assignment4-master/input.txt'
+input_file = 'input.txt'
 
 class Process:
     last_scheduled_time = 0
@@ -82,7 +82,6 @@ def SRTF_scheduling(process_list):
             continue
 
         srtf_index = rem_bt.index(min(candidate_burst))
-        # index = rem_bt.index(min([t for t in rem_bt if t and t <= current_time]))
         process = process_list[srtf_index]
 
         if current_time < process.arrive_time:
@@ -176,16 +175,16 @@ def main(argv):
         print (process)
     print ("simulating FCFS ----")
     FCFS_schedule, FCFS_avg_waiting_time =  FCFS_scheduling(process_list)
-    write_output('/Users/yaowenzhang/Downloads/cs5250-assignment4-master/FCFS.txt', FCFS_schedule, FCFS_avg_waiting_time )
+    write_output('FCFS.txt', FCFS_schedule, FCFS_avg_waiting_time )
     print ("simulating RR ----")
     RR_schedule, RR_avg_waiting_time =  RR_scheduling(process_list,time_quantum = 2)
-    write_output('/Users/yaowenzhang/Downloads/cs5250-assignment4-master/RR.txt', RR_schedule, RR_avg_waiting_time )
+    write_output('RR.txt', RR_schedule, RR_avg_waiting_time )
     print ("simulating SRTF ----")
     SRTF_schedule, SRTF_avg_waiting_time =  SRTF_scheduling(process_list)
-    write_output('/Users/yaowenzhang/Downloads/cs5250-assignment4-master/SRTF.txt', SRTF_schedule, SRTF_avg_waiting_time )
+    write_output('SRTF.txt', SRTF_schedule, SRTF_avg_waiting_time )
     print ("simulating SJF ----")
     SJF_schedule, SJF_avg_waiting_time =  SJF_scheduling(process_list, alpha = 0.5)
-    write_output('/Users/yaowenzhang/Downloads/cs5250-assignment4-master/SJF.txt', SJF_schedule, SJF_avg_waiting_time )
+    write_output('SJF.txt', SJF_schedule, SJF_avg_waiting_time )
 
 if __name__ == '__main__':
     main(sys.argv[1:])
